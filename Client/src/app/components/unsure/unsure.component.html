@@ -1,63 +1,80 @@
-<div>
-  <form [formGroup]="quoteForm" (ngSubmit)="GetQuote()" >
+<div class="container mt-4">
+  <div class="card shadow-sm" style="max-width: 640px; margin: 0 auto;">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">Car Insurance Quote</h4>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="quoteForm" (ngSubmit)="GetQuote()">
 
-    <div class="mb-3">
-    <label>
-      Insurance Type:
-      <select  (change)="changeInsuranceType($event)" formControlName="insuranceType">
-        <option value="" disabled>Choose your type of insurance</option>
-        <option *ngFor="let type of details.insuranceTypes" [value]="type.type">{{type.description}}</option>
-     </select>
-    </label>
-    <div  class="error"  *ngIf="insuranceTypeCtrl.invalid && (insuranceTypeCtrl.dirty || insuranceTypeCtrl.touched)">
-      <div *ngIf="insuranceTypeCtrl.errors?.required">
-        Insurance type is required.
-      </div>
-    </div>
-  </div>
+        <div class="mb-3 row align-items-start">
+          <label class="col-sm-4 col-form-label fw-semibold">Insurance Type</label>
+          <div class="col-sm-8">
+            <select class="form-select" (change)="changeInsuranceType($event)" formControlName="insuranceType">
+              <option value="" disabled>Choose your type of insurance</option>
+              <option *ngFor="let type of details.insuranceTypes" [value]="type.type">{{type.description}}</option>
+            </select>
+            <div class="text-danger small mt-1" *ngIf="submitted && insuranceTypeCtrl.invalid">
+              Insurance type is required.
+            </div>
+          </div>
+        </div>
 
-  <div class="mb-3">
-    <label>
-      Date of Birth:
-      <input type="date" formControlName="dateOfBirth">
-    </label>
-    <div  class="error"  *ngIf="dateOfBirthCtrl.invalid && (dateOfBirthCtrl.dirty || dateOfBirthCtrl.touched)">
-      <div *ngIf="dateOfBirthCtrl.errors?.required">
-        Date of Birth is required.
+        <div class="mb-3 row align-items-start">
+          <label class="col-sm-4 col-form-label fw-semibold">Date of Birth</label>
+          <div class="col-sm-8">
+            <input type="date" class="form-control" formControlName="dateOfBirth">
+            <div class="text-danger small mt-1" *ngIf="submitted && dateOfBirthCtrl.invalid">
+              Date of birth is required.
+            </div>
+            <div class="form-text">Must be between 17 and 80 years old.</div>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-start">
+          <label class="col-sm-4 col-form-label fw-semibold">Make</label>
+          <div class="col-sm-8">
+            <select class="form-select" (change)="changeMake($event)" formControlName="make">
+              <option value="" disabled>Choose your make</option>
+              <option *ngFor="let make of details.makes" [value]="make">{{make}}</option>
+            </select>
+            <div class="text-danger small mt-1" *ngIf="submitted && makeCtrl.invalid">
+              Make is required.
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-4 row align-items-start">
+          <label class="col-sm-4 col-form-label fw-semibold">Model</label>
+          <div class="col-sm-8">
+            <select class="form-select" (change)="changeModel($event)" formControlName="model">
+              <option value="" disabled>Choose your model</option>
+              <option *ngFor="let model of Models" [value]="model">{{model}}</option>
+            </select>
+            <div class="text-danger small mt-1" *ngIf="submitted && modelCtrl.invalid">
+              Model is required.
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            {{ isLoading ? 'Getting Quote...' : 'Get Quote' }}
+          </button>
+          <button type="button" class="btn btn-outline-secondary" (click)="resetForm()">Reset</button>
+        </div>
+
+      </form>
+
+      <div *ngIf="ageError" class="alert alert-warning mt-4">
+        <strong>Not eligible:</strong> {{ ageError }}
       </div>
-    </div>
-  </div>  
-    <div class="mb-3">
-      <label>
-      Make:
-      <select  (change)="changeMake($event)" formControlName="make">
-        <option value="" disabled>Choose your make</option>
-        <option *ngFor="let make of details.makes" [value]="make">{{make}}</option>
-     </select>
-    </label>
-    <div  class="error"  *ngIf="makeCtrl.invalid && (makeCtrl.dirty || makeCtrl.touched)">
-      <div *ngIf="makeCtrl.errors?.required">
-        Make is required.
+
+      <div *ngIf="QuoteReceived" class="alert alert-success mt-4">
+        <h5 class="alert-heading mb-1">Your Quote</h5>
+        <p class="mb-0 fs-3 fw-bold">£{{ Quote | number:'1.2-2' }}</p>
       </div>
+
     </div>
   </div>
-  <div class="mb-3">
-    <label>
-      Model:
-      <select  (change)="changeModel($event)" formControlName="model">
-        <option value="" disabled>Choose your model</option>
-        <option *ngFor="let model of Models" [value]="model">{{model}}</option>
-     </select>
-    </label>
-    <div class="error" *ngIf="modelCtrl.invalid && (modelCtrl.dirty || modelCtrl.touched)">
-      <div *ngIf="modelCtrl.errors?.required">
-        Model is required.
-      </div>
-    </div>
-  </div>
-    <button type="submit"> Get Quote</button>
-    <!--decide when should be visible.  If GetQuote is no disabled, could do wait until clicked and on change of form data-->
-    <div class="error" [style.visibility]="quoteForm.valid || !touched ? 'hidden' : 'visible'">The form is not valid</div>
-    <div [style.visibility]="QuoteReceived ? 'visible' : 'hidden'">{{Quote}}</div>
-  </form>
 </div>
