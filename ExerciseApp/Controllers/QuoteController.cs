@@ -1,4 +1,5 @@
-﻿using ExerciseApp.Model;
+﻿using System;
+using ExerciseApp.Model;
 using ExerciseApp.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,10 +28,17 @@ namespace ExerciseApp.Controllers
             var returnObject = new QuoteResponse() { QuoteRequestValid = false };
             if (TryValidateModel(request))
             {
-                returnObject.QuoteRequestValid = true;
-                returnObject.Quote = _quoteService.PerformQuote(request);
+                try
+                {
+                    returnObject.Quote = _quoteService.PerformQuote(request);
+                    returnObject.QuoteRequestValid = true;
+                }
+                catch (InvalidOperationException ex)
+                {
+                    returnObject.Message = ex.Message;
+                }
             }
-            
+
             return returnObject;
         }
 
