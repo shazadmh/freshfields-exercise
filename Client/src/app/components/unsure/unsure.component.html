@@ -77,4 +77,35 @@
 
     </div>
   </div>
+
+  <div class="card shadow-sm mt-4" style="max-width: 640px; margin: 1.5rem auto 0;">
+    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Saved Quotes</h5>
+      <span class="badge bg-light text-dark">{{ savedQuotes.length }}</span>
+    </div>
+    <div class="card-body p-0">
+      <div *ngIf="savedQuotes.length === 0" class="text-muted text-center py-4">
+        No quotes saved yet.
+      </div>
+      <table *ngIf="savedQuotes.length > 0" class="table table-striped table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Date</th>
+            <th>Make / Model</th>
+            <th>Cover</th>
+            <th class="text-end">Quote</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let q of savedQuotes">
+            <td class="text-nowrap">{{ q.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ q.make }} {{ q.model }}</td>
+            <td>{{ formatInsuranceType(q.insuranceType) }}</td>
+            <td class="text-end fw-semibold">£{{ q.quote | number:'1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </div>

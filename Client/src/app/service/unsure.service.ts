@@ -16,7 +16,10 @@ export class UnsureService {
     }
 
     GetQuote<t>(data: any) {
-      return this.httpClient.post<t>("http://localhost:5000/Quote", data);
-  
-  }
-  }
+        return this.httpClient.post<t>("http://localhost:5000/Quote", data);
+    }
+
+    getQuotes<t>() {
+        return this.httpClient.get<t>("http://localhost:5000/Quote/saved");
+    }
+}
